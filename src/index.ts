@@ -21,20 +21,17 @@ command.command('initContainer').description('Initializing a new container').act
       const nameCapitalize = capitalizeFirstLetter(name);
 
       fs.mkdirSync(name);
-      fs.writeFileSync(join(name, 'dtos.ts'), `
-export interface IState {}
+      fs.writeFileSync(join(name, 'dtos.ts'), `export interface IState {}
 
 export interface IActions {
   exampleAction(): void;
 }
-      `)
-      fs.writeFileSync(join(name, 'index.tsx'), `
-import React, {
+`)
+      fs.writeFileSync(join(name, 'index.tsx'), `import React, {
   useState,
   useCallback,
   useContext,
   memo,
-  useEffect,
 } from 'react';
 
 import changeState from '../helpers/changeState';
@@ -82,41 +79,39 @@ export default function with${nameCapitalize}Provider(
 
   return memo(With${nameCapitalize});
 }
-      `)
-      fs.writeFileSync(join(name, 'actions.ts'), `
-import { IDataChangeState } from '../helpers/changeState';
+`)
+      fs.writeFileSync(join(name, 'actions.ts'), `import { IDataChangeState } from '../helpers/changeState';
 
 import { IActions, IState } from './dtos';
 
 interface IData {
   data: IState;
-  changeState(data: IDataChangeState): void;
+  changeState(data: IDataChangeState<IState, keyof IState>): void;
 }
 
 export default ({ data, changeState }: IData): IActions => ({
   exampleAction: () => {},
 });
-      `)
+`)
       if (!fs.existsSync('helpers')) {
         fs.mkdirSync('helpers');
-        fs.writeFileSync(join('helpers', 'changeState.ts'), `
-import { SetStateAction } from 'react';
-
-interface IDataChangeState<T extends any, K extends keyof T> {
+        fs.writeFileSync(join('helpers', 'changeState.ts'), `import { Dispatch, SetStateAction } from 'react';
+        
+export interface IDataChangeState<T extends any, K extends keyof T> {
   label: K;
   value: T[K];
 }
 
-export default <T extends any>(setData: SetStateAction<T>) => ({
+export default <T extends object>(setData: Dispatch<SetStateAction<T>>) => ({
   label,
   value,
-}: IDataChangeState<T>): void => {
-  setData((data: object) => ({
+}: IDataChangeState<T, keyof T>): void => {
+  setData((data: T) => ({
     ...data,
     [label]: value,
   }));
 };
-        `)
+`)
       }
     })
 });
