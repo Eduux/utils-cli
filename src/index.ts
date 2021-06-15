@@ -93,7 +93,7 @@ export default ({ data, changeState }: IData): IActions => ({
   exampleAction: () => {},
 });
 `)
-      if (!fs.existsSync('helpers')) {
+      if (!fs.existsSync('helpers') && !fs.existsSync(join('..', 'helpers'))) {
         fs.mkdirSync('helpers');
         fs.writeFileSync(join('helpers', 'changeState.ts'), `import { Dispatch, SetStateAction } from 'react';
         

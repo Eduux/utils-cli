@@ -1,13 +1,17 @@
 {
-  "name": "utils-cli",
+  "name": "@eduux/utils-cli",
   "version": "1.0.0",
   "main": "index.js",
   "repository": "https://github.com/Eduux/utils-cli.git",
   "author": "eduardo.quadros <eduardo.quadros@vortigo.com.br>",
   "license": "MIT",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "prepublish": "tsc"
   },
+  "files": [
+    "bin"
+  ],
   "bin": "./bin/index.js",
   "dependencies": {
     "commander": "^7.2.0",
